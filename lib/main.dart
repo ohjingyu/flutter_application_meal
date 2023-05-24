@@ -42,18 +42,25 @@ class _MainPageState extends State<MainPage> {
     String toDate = dt.toString().split(' ')[3].replaceAll('-', '');
     var neisApi = NeisApi();
     var meals = await neisApi.getMeal(fromDate: fromDate, toDate: toDate);
+
     setState(() {
-      mealList = ListView.separated(
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text(meals[index]['MLSV_YMD']),
-              subtitle: Text(meals[index]['DDISH_NM']
-                  .toString()
-                  .replaceAll('<br/>', '\n')),
-            );
-          },
-          separatorBuilder: (context, index) => Divider(),
-          itemCount: meals.length);
+      if (meals.isEmpty) {
+        mealList = Center(
+          child: Text('결과가 텅텅'),
+        );
+      } else {
+        mealList = ListView.separated(
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(meals[index]['MLSV_YMD']),
+                subtitle: Text(meals[index]['DDISH_NM']
+                    .toString()
+                    .replaceAll('<br/>', '\n')),
+              );
+            },
+            separatorBuilder: (context, index) => Divider(),
+            itemCount: meals.length);
+      }
     });
   }
 
